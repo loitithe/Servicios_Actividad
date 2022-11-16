@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,33 +22,31 @@ public class Ejecutable {
      * @param args the command line arguments
      */
     public void execProgram() throws IOException {
-        // File directorio = new File("C:\\Users\\rodri\\Documents\\NetBeansProjects\\EjerciciosFPdistancia\\Servicios_Actividad\\build\\classes\\servicios_actividad");
-        File directorio = new File("C:\\Users\\rodri\\Documents\\NetBeansProjects\\EjerciciosFPdistancia\\Servicios_Actividad\\build\\classes\\");
+        File directorio = new File(".\\build\\classes\\");
         // Proceso a ejecutar  
-
-        ProcessBuilder pb = new ProcessBuilder("java", "Aleatorios");
-        pb.directory(directorio);
-        Process p = pb.start();
-        InputStreamReader in = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(in);
         String entrada = "";
-        while (!entrada.equals("fin")) {
-            try {
 
-                System.out.printf("Directorio de trabajo : %s\n", pb.directory());
-                System.out.println("Escribe fin para terminar");
-                entrada = br.readLine();
-                //capturamos el numero aleatorio
-                InputStream is = p.getInputStream();
+        System.out.println("Escribe fin para terminar");
+
+        while (!entrada.equals("fin")) {
+            ProcessBuilder pb = new ProcessBuilder("java", "servicios_actividad.Aleatorio");
+
+            pb.directory(directorio);
+            Process p = pb.start();
+
+            InputStreamReader in = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(in);
+            //capturamos el numero aleatorio
+            InputStream is = p.getInputStream();
+            entrada = br.readLine();
+
+            try {
                 int c;
                 while ((c = is.read()) != -1) {
-                    System.out.print((char) c);
+                    System.out.println("Nº aleatorio : " + (char) c);
                     is.close();
                 }
-                int exitVal;
-                exitVal = p.waitFor();
-                System.out.println("Valor de salida:" + exitVal);
-            } catch (InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
@@ -59,7 +59,9 @@ public class Ejecutable {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+
         }
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -67,4 +69,5 @@ public class Ejecutable {
         Ejecutable ej = new Ejecutable();
         ej.execProgram();
     }
+
 }
